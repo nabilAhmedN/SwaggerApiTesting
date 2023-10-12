@@ -1,0 +1,282 @@
+{
+	"info": {
+		"_postman_id": "cc30e77c-fd6c-4f9e-a6ff-0749c406e22c",
+		"name": "SwaggerUserApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25140264"
+	},
+	"item": [
+		{
+			"name": "create Users",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomnum = Math.floor((Math.random() * 100 + 1));\r",
+							"var randomstr = \"nabil\"+Math.random().toString(36).substring(2);\r",
+							"\r",
+							"pm.environment.set(\"id\", randomnum);\r",
+							"pm.environment.set(\"username\", randomstr);\r",
+							"pm.environment.set(\"firstName\", randomstr);\r",
+							"pm.environment.set(\"lastName\", randomstr);\r",
+							"pm.environment.set(\"email\", randomstr+\"@gmail.com\");\r",
+							"pm.environment.set(\"password\", randomstr);\r",
+							"pm.environment.set(\"phone\", 1000001000);\r",
+							"pm.environment.set(\"userStatus\", 0);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User Created\",()=>{\r",
+							"    pm.response.json().message;\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{id}}\",\r\n  \"username\": \"{{username}}\",\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"phone\": \"{{phone}}\",\r\n  \"userStatus\": \"{{userStatus}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function (){\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response time is less than or equal to 500ms\", function (){\r",
+							"    pm.expect(pm.response.responseTime).to.be.at.most(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check the Phone Number\", function (){\r",
+							"    pm.environment.get('phone') == jsonData.phone;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify username\",function (){\r",
+							"    pm.environment.get('username') == jsonData.username;\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{firstName}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{firstName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// var randomstr = \"nabil\"+Math.random().toString(36).substring(2);\r",
+							"\r",
+							"// pm.collectionVariables.set(\"email\", randomstr+\"@gmail.com\");\r",
+							"// pm.collectionVariables.set(\"password\", randomstr);\r",
+							"// pm.collectionVariables.set(\"phone\", 2222221111);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function (){\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Status code name has string\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Updated User\",function (){\r",
+							"    pm.response.json().message;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{id}}\",\r\n    \"username\": \"{{username}}\",\r\n    \"firstName\": \"{{firstName}}\",\r\n    \"lastName\": \"{{lastName}}\",\r\n    \"email\": \"nabil@gmail.com\",\r\n    \"password\": \"4hjxhukkyj\",\r\n    \"phone\": \"2222221111\",\r\n    \"userStatus\": \"{{userStatus}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/{{firstName}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{firstName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is empty (No Data)\", function () {\r",
+							"    const jsonData = pm.response.text();\r",
+							"    pm.expect(jsonData).to.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains a Content-Length header\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Length\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User Deleted\",function (){\r",
+							"    pm.environment.get('username') == pm.response.json().message;\r",
+							"})\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{firstName}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{firstName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
